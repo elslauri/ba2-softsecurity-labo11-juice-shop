@@ -12,13 +12,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with: 
-          node-version: '16'
+          node-version: '22'
 
       - name: Install dependencies
         run: npm install
 
       - name: Install CycloneDX CLI
-        run: npm install -g @cyclonedx/bom
+        run: npm install -g @cyclonedx/cyclonedx-npm
 
       - name: Generate SBOM
         run: cyclonedx-bom --output-format json --output sbom.json
