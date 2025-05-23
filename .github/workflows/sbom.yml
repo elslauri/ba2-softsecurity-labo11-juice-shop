@@ -1,21 +1,32 @@
 name: Generate SBOM
+
 on: [push]
+
 jobs: 
   sbom:
     runs-on: ubuntu-latest
     steps: 
-      - uses: actions/checkout@v3
-      - name: Install Node.js
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with: 
           node-version: '16'
-      - name: Install CycloneDX tool
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install CycloneDX CLI
         run: npm install -g @cyclonedx/bom
+
       - name: Generate SBOM
-        run: | 
-          npm ci
-          cyclonedx-bom --output-format json --output sbom.json
-      - name: Upload SBOM as artifact
+        run: cyclonedx-bom --output-format json --output sbom.json
+
+      - name: Verify SBOM file exists
+        run: ls -l sbom.json
+
+      - name: Upload SBOM artifact
         uses: actions/upload-artifact@v4
         with:
           name: sbom
